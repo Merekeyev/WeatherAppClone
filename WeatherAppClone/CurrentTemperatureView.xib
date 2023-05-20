@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CurrentTemperatureView" customModule="WeatherAppClone" customModuleProvider="target">
+            <connections>
+                <outlet property="cityNameLabel" destination="Uew-0d-QJW" id="WtR-3v-fS0"/>
+                <outlet property="conditionLabel" destination="YAc-88-GFI" id="9fV-sG-eST"/>
+                <outlet property="currentTemperatureLabel" destination="ihd-Ej-AAv" id="Qdj-eX-tMq"/>
+                <outlet property="rangeLabel" destination="Egy-RS-wgq" id="zmR-GH-E0q"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="194"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Алматы" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uew-0d-QJW">
+                    <rect key="frame" x="0.0" y="59" width="393" height="24"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="21°" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ihd-Ej-AAv">
+                    <rect key="frame" x="0.0" y="83" width="393" height="52.666666666666657"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="44"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Облачно" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAc-88-GFI">
+                    <rect key="frame" x="0.0" y="135.66666666666666" width="393" height="19.333333333333343"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Макс.: 27, мин.: 17" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Egy-RS-wgq">
+                    <rect key="frame" x="0.0" y="155" width="393" height="19.333333333333343"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Egy-RS-wgq" secondAttribute="trailing" id="4PW-4s-fea"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Uew-0d-QJW" secondAttribute="trailing" id="60Y-n0-0a1"/>
+                <constraint firstItem="ihd-Ej-AAv" firstAttribute="top" secondItem="Uew-0d-QJW" secondAttribute="bottom" id="Lil-fd-qbo"/>
+                <constraint firstItem="YAc-88-GFI" firstAttribute="top" secondItem="ihd-Ej-AAv" secondAttribute="bottom" id="RDr-F6-4fh"/>
+                <constraint firstItem="Uew-0d-QJW" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="Sbo-2s-dV2"/>
+                <constraint firstItem="Egy-RS-wgq" firstAttribute="top" secondItem="YAc-88-GFI" secondAttribute="bottom" id="Veu-aX-nm2"/>
+                <constraint firstItem="ihd-Ej-AAv" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Zvl-t6-R6p"/>
+                <constraint firstItem="YAc-88-GFI" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="dLo-lH-Uhz"/>
+                <constraint firstItem="Egy-RS-wgq" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="kyW-Ja-w5O"/>
+                <constraint firstItem="Uew-0d-QJW" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="n7W-B3-LHu"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ihd-Ej-AAv" secondAttribute="trailing" id="pPS-zM-LDd"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="YAc-88-GFI" secondAttribute="trailing" id="zSt-Lb-5LC"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="130.53435114503816" y="172.53521126760563"/>
+        </view>
+    </objects>
+</document>
