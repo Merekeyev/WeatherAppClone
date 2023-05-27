@@ -12,4 +12,17 @@ enum WeatherCondition {
     case sunny
     case rainy
     case snowy
+    
+    var iconName: String {
+        switch self {
+        case .clouds:
+            return "clouds"
+        case .sunny:
+            return "clouds"
+        case .rainy:
+            return "clouds"
+        case .snowy:
+            return "clouds"
+        }
+    }
 }

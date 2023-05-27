@@ -11,4 +11,5 @@ struct ForecaseItemModel {
     let time: String
     let condition: WeatherCondition
     let temperature: Int
+    var isCurrent: Bool
 }
