@@ -19,10 +19,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var conditionLabel: UILabel!
     @IBOutlet weak var rangeLabel: UILabel!
     
-    private var forecastItems: [ForecaseItemModel] = []
-    private var weekDays: [Week] = []
+    private let dataSource: ForecastDataSource = .init()
     
-    private var city: CityModel = .defaultCity {
+    private var cityModel: CityModel? {
         didSet {
             configureUI()
         }
@@ -40,54 +39,10 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         backgroundForecastView.backgroundColor = Color.blueBackgroundColor
         backgroundForecastView.layer.cornerRadius = 8
         
-        (0..<24).forEach {
-            var time: String
-            var currentDate = Date()
-             var dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "HH"
-            var timeDuration = dateFormatter.string(from: currentDate)
-
-            if Int(timeDuration) == $0 {
-                time = "Сейчас"
-            } else {
-                time = $0 < 10 ? "0\($0)" : "\($0)"
-            }
-
-            let forecastItem = ForecaseItemModel(time: time, condition: .clouds, temperature: Int.random(in: (14..<28)), isCurrent: Int(timeDuration) == $0)
-            forecastItems.append(forecastItem)
-        }
-        
-        forecastItems.sort(by: { $0.isCurrent != $1.isCurrent })
-
-        forecastItems.forEach {
-            let forecastView = ForecastItemView()
-            forecastView.configure(model: $0)
-            forecastStackView.addArrangedSubview(forecastView)
-        }
-        
-        backgroundWeekForecastView.layer.cornerRadius = 8
-        weekForecastStackView.backgroundColor = .clear
-        
-        var counter = 1
-        (0..<25).forEach {
-            counter = $0 - (7 * counter) > 6 ? counter + 1 : counter
-            let rawValue = $0 - (7 * counter) < 0 ? $0 : $0 - (7 * counter)
-            weekDays.append(Week(rawValue: rawValue)!)
-        }
-        
-        weekDays.forEach {
-            let dayForecastModel = DayForecastModel(day: $0.shortName,
-                                                    weatherCondition: .clouds,
-                                                    minTemperature: 17,
-                                                    maxTemperature: 27)
-            let dayForecastView = DayForecastView()
-            dayForecastView.configure(model: dayForecastModel)
-            weekForecastStackView.addArrangedSubview(dayForecastView)
-        }
+        getData()
     }
     
     @IBAction func menuButtonTapped(_ sender: UIButton) {
@@ -98,15 +53,45 @@ class ViewController: UIViewController {
     }
     
     private func configureUI() {
-        nameLabel.text = city.name
-        temperatureLabel.text = city.currentTemperature.withTemperature
-        conditionLabel.text = city.weatherCondition.condition
-        rangeLabel.text = "Макс.: \(city.maximumTemperature.withTemperature), мин.: \(city.minimumTemperature.withTemperature)"
+        guard let cityModel = cityModel else { return }
+        
+        nameLabel.text = cityModel.name
+        temperatureLabel.text = cityModel.currentTemperature.withCelcius
+        conditionLabel.text = cityModel.condition.text
+        
+        guard let maxTemperature = cityModel.maxTemperature, let minTemperature = cityModel.minTemperature else { return }
+        rangeLabel.text = "Макс.: \(maxTemperature.withCelcius), мин.: \(minTemperature.withCelcius)"
+        
+        cityModel.forecastDays.forEach {
+            let dayForecastView = DayForecastView()
+            dayForecastView.configure(model: $0)
+            weekForecastStackView.addArrangedSubview(dayForecastView)
+        }
+        
+        guard let currentDay = cityModel.forecastDays.first else { return }
+        currentDay.hour.forEach {
+            let forecastItemView = ForecastItemView()
+            forecastItemView.configure(model: $0)
+            forecastStackView.addArrangedSubview(forecastItemView)
+        }
+    }
+    
+    private func getData() {
+        dataSource.getForecast(cityName: "Almaty", days: 10) { result in
+            switch result {
+            case .success(let cityModel):
+                DispatchQueue.main.async {
+                    self.cityModel = cityModel
+                }
+            case .failure(let error):
+                print("error = \(error.localizedDescription)")
+            }
+        }
     }
 }
 
 extension ViewController: CitiesViewControllerDelegate {
     func didSelectCity(_ city: CityModel) {
-        self.city = city
+        self.cityModel = city
     }
 }

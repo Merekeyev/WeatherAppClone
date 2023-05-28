@@ -7,21 +7,57 @@
 
 import Foundation
 
-struct CityModel {
+struct CityModel: Decodable {
     let name: String
-    let time: String
-    let weatherCondition: WeatherCondition
-    let currentTemperature: Int
-    let maximumTemperature: Int
-    let minimumTemperature: Int
-    
-    static var cities: [CityModel] {
-        [CityModel(name: "Алматы", time: "15:51", weatherCondition: .clouds, currentTemperature: 23, maximumTemperature: 25, minimumTemperature: 17),
-         CityModel(name: "Нью-Йорк", time: "02:51", weatherCondition: .sunny, currentTemperature: 26, maximumTemperature: 28, minimumTemperature: 20),
-         CityModel(name: "Дубай", time: "13:51", weatherCondition: .sunny, currentTemperature: 30, maximumTemperature: 34, minimumTemperature: 25),
-         CityModel(name: "Лондон", time: "09:51", weatherCondition: .rainy, currentTemperature: 12, maximumTemperature: 15, minimumTemperature: 9),
-         CityModel(name: "Стамбул", time: "12:51", weatherCondition: .sunny, currentTemperature: 25, maximumTemperature: 27, minimumTemperature: 19)]
+    let currentTemperature: Double
+    let condition: WeatherConditionModel
+    var maxTemperature: Double?
+    var minTemperature: Double?
+    let forecastDays: [ForecastDayModel]
+
+    enum CodingKeys: String, CodingKey {
+        case location
+        case current
+        case forecast
     }
     
-    static var defaultCity: CityModel = CityModel(name: "Алматы", time: "15:51", weatherCondition: .clouds, currentTemperature: 23, maximumTemperature: 25, minimumTemperature: 17)
+    enum LocationCodingKeys: String, CodingKey {
+        case name
+    }
+    
+    enum CurrentCodingKeys: String, CodingKey {
+        case temperature = "temp_c"
+        case condition
+    }
+    
+    enum ForecastCodingKeys: String, CodingKey {
+        case forecastday
+    }
+    
+    enum ForecastDayCodingKeys: String, CodingKey {
+        case day
+    }
+    
+    enum DayCodingKeys: String, CodingKey {
+        case maxTemperature = "maxtemp_c"
+        case minTemperature = "mintemp_c"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let locationContainer = try container.nestedContainer(keyedBy: LocationCodingKeys.self, forKey: .location)
+        
+        let currentContainer = try container.nestedContainer(keyedBy: CurrentCodingKeys.self, forKey: .current)
+        
+        let forecastContainer = try container.nestedContainer(keyedBy: ForecastCodingKeys.self, forKey: .forecast)
+        
+        self.name = try locationContainer.decode(String.self, forKey: .name)
+        self.currentTemperature = try currentContainer.decode(Double.self, forKey: .temperature)
+        self.condition = try currentContainer.decode(WeatherConditionModel.self, forKey: .condition)
+        self.forecastDays = try forecastContainer.decode([ForecastDayModel].self, forKey: .forecastday)
+        
+        self.maxTemperature = forecastDays.first?.day.maxTemperature
+        self.minTemperature = forecastDays.first?.day.minTemperature
+    }
 }

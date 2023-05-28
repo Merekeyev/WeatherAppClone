@@ -70,20 +70,16 @@ class ForecastItemView: UIView {
         ])
     }
     
-    func configure(model: ForecaseItemModel) {
-        timeLabel.text = model.time
-        
-        switch model.condition {
-        case .clouds:
-            icon.image = UIImage(named: "clouds")
-        case .sunny:
-            icon.image = UIImage(named: "clouds")
-        case .rainy:
-            icon.image = UIImage(named: "clouds")
-        case .snowy:
-            icon.image = UIImage(named: "clouds")
+    func configure(model: ForecastHourModel) {
+        var dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        if let date = dateFormatter.date(from: model.time) {
+            dateFormatter.dateFormat = "HH:mm"
+            timeLabel.text = dateFormatter.string(from: date)
         }
-        
-        temperatureLabel.text = model.temperature.withTemperature
+
+        icon.image = UIImage(named: "clouds")
+
+        temperatureLabel.text = model.currentTemperature.withCelcius
     }
 }

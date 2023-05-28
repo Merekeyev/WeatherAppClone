@@ -60,11 +60,14 @@ class CityTableViewCell: UITableViewCell {
     }()
     
     func configure(with city: CityModel) {
+//        nameLabel.text = city.name
+//        timeLabel.text = city.time
+//        weatherConditionLabel.text = city.weatherCondition.condition
+//        temperatureLabel.text = city.currentTemperature.withTemperature
+//        temperatureRangeLabel.text = "Макс.: \(city.maximumTemperature.withTemperature), мин.: \(city.minimumTemperature.withTemperature)"
         nameLabel.text = city.name
-        timeLabel.text = city.time
-        weatherConditionLabel.text = city.weatherCondition.condition
-        temperatureLabel.text = city.currentTemperature.withTemperature
-        temperatureRangeLabel.text = "Макс.: \(city.maximumTemperature.withTemperature), мин.: \(city.minimumTemperature.withTemperature)"
+        temperatureLabel.text = city.currentTemperature.withCelcius
+        weatherConditionLabel.text = city.condition.text
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

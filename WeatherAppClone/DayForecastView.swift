@@ -73,11 +73,16 @@ class DayForecastView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(model: DayForecastModel) {
-        dayLabel.text = model.day
-        icon.image = UIImage(named: model.weatherCondition.iconName)
-        minTemperatureLabel.text = model.minTemperature.withTemperature
-        maxTemperatureLabel.text = model.maxTemperature.withTemperature
+    func configure(model: ForecastDayModel) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        if let date = dateFormatter.date(from: model.date) {
+            dayLabel.text = dateFormatter.shortWeekdaySymbols[Calendar.current.component(.weekday, from: date) - 1]
+        }
+
+        icon.image = UIImage(named: "clouds")
+        minTemperatureLabel.text = model.day.minTemperature.withCelcius
+        maxTemperatureLabel.text = model.day.maxTemperature.withCelcius
     }
     
     private func setupUI() {

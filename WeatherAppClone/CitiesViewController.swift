@@ -12,7 +12,7 @@ protocol CitiesViewControllerDelegate: AnyObject {
 }
 
 class CitiesViewController: UIViewController {
-    private let cities: [CityModel] = CityModel.cities
+    private let cities: [CityModel] = []
     private var filteredCities: [CityModel] = []
     
     private var isSearchBarEmpty: Bool {
