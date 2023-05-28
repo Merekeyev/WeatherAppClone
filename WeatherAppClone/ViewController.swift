@@ -14,11 +14,33 @@ class ViewController: UIViewController {
     @IBOutlet weak var weekForecastStackView: UIStackView!
     @IBOutlet weak var menuButton: UIButton!
     
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var temperatureLabel: UILabel!
+    @IBOutlet weak var conditionLabel: UILabel!
+    @IBOutlet weak var rangeLabel: UILabel!
+    
     private var forecastItems: [ForecaseItemModel] = []
     private var weekDays: [Week] = []
     
+    private var city: CityModel = .defaultCity {
+        didSet {
+            configureUI()
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         backgroundForecastView.backgroundColor = Color.blueBackgroundColor
         backgroundForecastView.layer.cornerRadius = 8
         
@@ -69,7 +91,22 @@ class ViewController: UIViewController {
     }
     
     @IBAction func menuButtonTapped(_ sender: UIButton) {
-        print("Menu button was tapped")
+        let viewController = CitiesViewController()
+        viewController.navigationTitle = "Погода"
+        viewController.delegate = self
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
+    private func configureUI() {
+        nameLabel.text = city.name
+        temperatureLabel.text = city.currentTemperature.withTemperature
+        conditionLabel.text = city.weatherCondition.condition
+        rangeLabel.text = "Макс.: \(city.maximumTemperature.withTemperature), мин.: \(city.minimumTemperature.withTemperature)"
+    }
+}
+
+extension ViewController: CitiesViewControllerDelegate {
+    func didSelectCity(_ city: CityModel) {
+        self.city = city
+    }
 }

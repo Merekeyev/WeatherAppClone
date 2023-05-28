@@ -25,4 +25,17 @@ enum WeatherCondition {
             return "clouds"
         }
     }
+    
+    var condition: String {
+        switch self {
+        case .clouds:
+            return "Преимущественно облачно"
+        case .sunny:
+            return "Ясно"
+        case .rainy:
+            return "Идет дождь"
+        case .snowy:
+            return "Идет снег"
+        }
+    }
 }
