@@ -1,17 +1,16 @@
 //
-//  ForecastDataSource.swift
+//  Network.swift
 //  WeatherAppClone
 //
-//  Created by Temirlan on 28.05.2023.
+//  Created by Temirlan on 3.06.2023.
 //
 
 import Foundation
 
-class ForecastDataSource {
-    func getForecast(cityName: String, days: Int, completion: @escaping (Result<CityModel, Error>) -> Void) {
-        let urlRequest = WeatherEndpoint.forecast(cityName: cityName, days: days).urlRequest
+class Network {
+    func execute<T: Decodable>(_ requestProviding: RequestProviding, completion: @escaping (Result<T, Error>) -> Void) {
         
-        URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+        URLSession.shared.dataTask(with: requestProviding.urlRequest) { data, response, error in
             do {
                 if let error = error {
                     completion(.failure(error))
@@ -27,7 +26,7 @@ class ForecastDataSource {
                 if let response = response as? HTTPURLResponse {
                     switch response.statusCode {
                     case 200..<300:
-                        let decodedObject = try decoder.decode(CityModel.self, from: data)
+                        let decodedObject = try decoder.decode(T.self, from: data)
                         completion(.success(decodedObject))
                     default:
                         throw NSError(domain: "base error", code: 0)

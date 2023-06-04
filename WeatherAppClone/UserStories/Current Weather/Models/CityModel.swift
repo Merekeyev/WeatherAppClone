@@ -8,12 +8,12 @@
 import Foundation
 
 struct CityModel: Decodable {
-    let name: String
+    var name: String
     let currentTemperature: Double
     let condition: WeatherConditionModel
     var maxTemperature: Double?
     var minTemperature: Double?
-    let forecastDays: [ForecastDayModel]
+    var forecastDays: [ForecastDayModel]
 
     enum CodingKeys: String, CodingKey {
         case location

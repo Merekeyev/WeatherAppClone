@@ -10,7 +10,13 @@ import Foundation
 struct ForecastDayModel: Decodable {
     let date: String
     let day: ForecastDayDayModel
-    let hour: [ForecastHourModel]
+    var hours: [ForecastHourModel]
+    
+    enum CodingKeys: String, CodingKey {
+        case date
+        case day
+        case hours = "hour"
+    }
 }
 
 struct ForecastDayDayModel: Decodable {
@@ -26,7 +32,7 @@ struct ForecastDayDayModel: Decodable {
 }
 
 struct ForecastHourModel: Decodable {
-    let time: String
+    var time: String
     let currentTemperature: Double
     let condition: WeatherConditionModel
     

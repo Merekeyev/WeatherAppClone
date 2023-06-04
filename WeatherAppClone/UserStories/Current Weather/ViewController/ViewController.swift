@@ -62,22 +62,19 @@ class ViewController: UIViewController {
         guard let maxTemperature = cityModel.maxTemperature, let minTemperature = cityModel.minTemperature else { return }
         rangeLabel.text = "Макс.: \(maxTemperature.withCelcius), мин.: \(minTemperature.withCelcius)"
         
+        weekForecastStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
         cityModel.forecastDays.forEach {
             let dayForecastView = DayForecastView()
             dayForecastView.configure(model: $0)
             weekForecastStackView.addArrangedSubview(dayForecastView)
         }
         
-        guard let currentDay = cityModel.forecastDays.first else { return }
-        currentDay.hour.forEach {
-            let forecastItemView = ForecastItemView()
-            forecastItemView.configure(model: $0)
-            forecastStackView.addArrangedSubview(forecastItemView)
-        }
+        configureCurrentHoursView()
     }
     
     private func getData() {
-        dataSource.getForecast(cityName: "Almaty", days: 10) { result in
+        dataSource.getForecast(cityName: cityModel?.name ?? "Almaty", days: 10) { result in
             switch result {
             case .success(let cityModel):
                 DispatchQueue.main.async {
@@ -88,10 +85,44 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    private func configureCurrentHoursView() {
+        guard let cityModel = cityModel else { return }
+                
+        guard let currentDay = cityModel.forecastDays.first else { return }
+         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH"
+        let nowTime = dateFormatter.string(from: Date())
+        
+        guard let currentHourIndex = currentDay.hours.firstIndex(where: {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+            guard let date = dateFormatter.date(from: $0.time) else { return false }
+            dateFormatter.dateFormat = "HH"
+            let loopTime = dateFormatter.string(from: date)
+            return loopTime == nowTime
+        }) else { return }
+        
+        var hours: [ForecastHourModel] = []
+        for (index, hour) in currentDay.hours.enumerated() {
+            if index >= currentHourIndex {
+                hours.append(hour)
+            }
+        }
+        
+        forecastStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        hours.forEach {
+            let forecastItemView = ForecastItemView()
+            forecastItemView.configure(model: $0)
+            forecastStackView.addArrangedSubview(forecastItemView)
+        }
+    }
 }
 
 extension ViewController: CitiesViewControllerDelegate {
-    func didSelectCity(_ city: CityModel) {
-        self.cityModel = city
+    func didSelectCity(_ city: SearchCityModel) {
+        cityModel?.name = city.name
+        getData()
     }
 }

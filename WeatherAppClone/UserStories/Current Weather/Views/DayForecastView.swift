@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class DayForecastView: UIView {
 
@@ -28,6 +29,7 @@ class DayForecastView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16)
         label.textColor = .white
+        label.textAlignment = .right
         return label
     }()
     
@@ -36,6 +38,7 @@ class DayForecastView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16)
         label.textColor = .white
+        label.textAlignment = .right
         return label
     }()
     
@@ -77,12 +80,19 @@ class DayForecastView: UIView {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         if let date = dateFormatter.date(from: model.date) {
-            dayLabel.text = dateFormatter.shortWeekdaySymbols[Calendar.current.component(.weekday, from: date) - 1]
+            
+            if dateFormatter.string(from: date) == dateFormatter.string(from: Date()) {
+                dayLabel.text = "Сегодня"
+            } else {
+                dayLabel.text = dateFormatter.shortWeekdaySymbols[Calendar.current.component(.weekday, from: date) - 1]
+            }
         }
 
-        icon.image = UIImage(named: "clouds")
         minTemperatureLabel.text = model.day.minTemperature.withCelcius
         maxTemperatureLabel.text = model.day.maxTemperature.withCelcius
+        
+        guard let url = URL(string: model.day.condition.iconURLPath) else { return }
+        icon.kf.setImage(with: url)
     }
     
     private func setupUI() {
@@ -92,7 +102,8 @@ class DayForecastView: UIView {
         NSLayoutConstraint.activate([
             dayLabel.topAnchor.constraint(equalTo: topAnchor, constant: 2),
             dayLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2),
-            dayLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
+            dayLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            dayLabel.widthAnchor.constraint(equalToConstant: 64)
         ])
         
         addSubview(icon)
@@ -106,7 +117,8 @@ class DayForecastView: UIView {
         addSubview(minTemperatureLabel)
         NSLayoutConstraint.activate([
             minTemperatureLabel.centerYAnchor.constraint(equalTo: dayLabel.centerYAnchor),
-            minTemperatureLabel.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 20)
+            minTemperatureLabel.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 20),
+            minTemperatureLabel.widthAnchor.constraint(equalToConstant: 50)
         ])
         
         addSubview(lineView)

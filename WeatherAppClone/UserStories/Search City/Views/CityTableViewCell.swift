@@ -27,47 +27,26 @@ class CityTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let timeLabel: UILabel = {
+    private let regionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 12)
+        label.font = .systemFont(ofSize: 14)
         label.textColor = .white
         return label
     }()
     
-    private let weatherConditionLabel: UILabel = {
+    private let countryLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 12)
+        label.font = .systemFont(ofSize: 16)
         label.textColor = .white
         return label
     }()
     
-    private let temperatureLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 28)
-        label.textColor = .white
-        return label
-    }()
-    
-    private let temperatureRangeLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 12)
-        label.textColor = .white
-        return label
-    }()
-    
-    func configure(with city: CityModel) {
-//        nameLabel.text = city.name
-//        timeLabel.text = city.time
-//        weatherConditionLabel.text = city.weatherCondition.condition
-//        temperatureLabel.text = city.currentTemperature.withTemperature
-//        temperatureRangeLabel.text = "Макс.: \(city.maximumTemperature.withTemperature), мин.: \(city.minimumTemperature.withTemperature)"
+    func configure(with city: SearchCityModel) {
         nameLabel.text = city.name
-        temperatureLabel.text = city.currentTemperature.withCelcius
-        weatherConditionLabel.text = city.condition.text
+        regionLabel.text = city.region
+        countryLabel.text = city.country
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -96,28 +75,16 @@ class CityTableViewCell: UITableViewCell {
             nameLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12)
         ])
         
-        containerView.addSubview(timeLabel)
+        containerView.addSubview(regionLabel)
         NSLayoutConstraint.activate([
-            timeLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            timeLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor)
+            regionLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            regionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor)
         ])
         
-        containerView.addSubview(weatherConditionLabel)
+        containerView.addSubview(countryLabel)
         NSLayoutConstraint.activate([
-            weatherConditionLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            weatherConditionLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -12)
-        ])
-        
-        containerView.addSubview(temperatureLabel)
-        NSLayoutConstraint.activate([
-            temperatureLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            temperatureLabel.topAnchor.constraint(equalTo: nameLabel.topAnchor)
-        ])
-        
-        containerView.addSubview(temperatureRangeLabel)
-        NSLayoutConstraint.activate([
-            temperatureRangeLabel.trailingAnchor.constraint(equalTo: temperatureLabel.trailingAnchor),
-            temperatureRangeLabel.bottomAnchor.constraint(equalTo: weatherConditionLabel.bottomAnchor)
+            countryLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            countryLabel.topAnchor.constraint(equalTo: nameLabel.topAnchor)
         ])
     }
 }

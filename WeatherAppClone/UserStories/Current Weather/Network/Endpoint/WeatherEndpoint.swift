@@ -11,7 +11,7 @@ enum WeatherEndpoint {
     case forecast(cityName: String, days: Int)
 }
 
-extension WeatherEndpoint {
+extension WeatherEndpoint: RequestProviding {
     var urlRequest: URLRequest {
         switch self {
         case .forecast(let cityName, let days):

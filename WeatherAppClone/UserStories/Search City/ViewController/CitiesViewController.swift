@@ -8,12 +8,16 @@
 import UIKit
 
 protocol CitiesViewControllerDelegate: AnyObject {
-    func didSelectCity(_ city: CityModel)
+    func didSelectCity(_ city: SearchCityModel)
 }
 
 class CitiesViewController: UIViewController {
-    private let cities: [CityModel] = []
-    private var filteredCities: [CityModel] = []
+    private var cities: [SearchCityModel] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+    private let dataSource = SearchCityDataSource()
     
     private var isSearchBarEmpty: Bool {
         searchController.searchBar.text?.isEmpty ?? true
@@ -26,6 +30,7 @@ class CitiesViewController: UIViewController {
     var navigationTitle: String = ""
     
     weak var delegate: CitiesViewControllerDelegate?
+    private var searchText: String?
     
     private let searchController: UISearchController = {
         let viewController = UISearchController(searchResultsController: nil)
@@ -70,16 +75,37 @@ class CitiesViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
     }
+    
+    @objc
+    private func search() {
+        guard let searchText = searchText else { return }
+        print("searchText = \(searchText)")
+        dataSource.searchCity(query: searchText) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let cities):
+                DispatchQueue.main.async {
+                    self.cities = cities
+                }
+            case .failure(let error):
+                print("error = \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func searchCity() {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(search), object: nil)
+        self.perform(#selector(search), with: nil, afterDelay: 0.5)
+    }
 }
 
 extension CitiesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        isFiltering ? filteredCities.count : cities.count
+        cities.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CityTableViewCell.identifier, for: indexPath) as? CityTableViewCell else { fatalError() }
-        let cities = isFiltering ? filteredCities : cities
         cell.configure(with: cities[indexPath.row])
         return cell
     }
@@ -91,7 +117,6 @@ extension CitiesViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cities = isFiltering ? filteredCities : cities
         delegate?.didSelectCity(cities[indexPath.row])
         navigationController?.popViewController(animated: true)
     }
@@ -107,8 +132,9 @@ extension CitiesViewController: UISearchBarDelegate {
             tableView.reloadData()
             return
         }
-        filteredCities = cities.filter { $0.name.lowercased().contains(searchText.lowercased()) }
-        tableView.reloadData()
+        
+        self.searchText = searchText
+        searchCity()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

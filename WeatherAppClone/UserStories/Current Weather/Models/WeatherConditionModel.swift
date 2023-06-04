@@ -19,6 +19,7 @@ struct WeatherConditionModel: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.text = try container.decode(String.self, forKey: .text)
-        self.iconURLPath = try container.decode(String.self, forKey: .iconURLPath)
+        let iconPath = try container.decode(String.self, forKey: .iconURLPath)
+        self.iconURLPath = "https:" + iconPath
     }
 }

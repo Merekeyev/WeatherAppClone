@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ForecastItemView: UIView {
     
@@ -71,15 +72,21 @@ class ForecastItemView: UIView {
     }
     
     func configure(model: ForecastHourModel) {
-        var dateFormatter = DateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
         if let date = dateFormatter.date(from: model.time) {
             dateFormatter.dateFormat = "HH:mm"
-            timeLabel.text = dateFormatter.string(from: date)
+            
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH"
+            let currentTime = timeFormatter.string(from: Date())
+            
+            timeLabel.text = currentTime == timeFormatter.string(from: date) ? "Сейчас" : dateFormatter.string(from: date)
         }
-
-        icon.image = UIImage(named: "clouds")
-
+        
         temperatureLabel.text = model.currentTemperature.withCelcius
+        
+        guard let url = URL(string: model.condition.iconURLPath) else { return }
+        icon.kf.setImage(with: url)
     }
 }
